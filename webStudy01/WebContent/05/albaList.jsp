@@ -32,6 +32,7 @@
 	</thead>
 	<tbody>
 		<%	
+		//깃 테스트 중입니다.
 			Map<String, AlbasengVO> albaVO = (Map<String, AlbasengVO>)getServletContext().getAttribute("albasengs");
 		
 			for(Entry<String, AlbasengVO> entry : albaVO.entrySet()){	
