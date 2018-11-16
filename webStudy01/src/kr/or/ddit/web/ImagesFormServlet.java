@@ -7,11 +7,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import kr.or.ddit.utils.CookieUtil;
 
 public class ImagesFormServlet extends HttpServlet{
 	
@@ -28,16 +32,6 @@ public class ImagesFormServlet extends HttpServlet{
 		    return mime.startsWith("image/");
 		});
 		
-		// action 속성의 값은 context/imgService, method="get"
-		InputStream in = this.getClass().getResourceAsStream("imageView.html");
-		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
-		BufferedReader br = new BufferedReader(isr);
-		
-		StringBuffer html = new StringBuffer();
-		String temp = null;
-		while((temp = br.readLine()) != null){
-			html.append(temp);
-		}	
 		
 		StringBuffer sb = new StringBuffer();
 		//String pattern = "<option value='%s'>%s</option>";
@@ -45,15 +39,33 @@ public class ImagesFormServlet extends HttpServlet{
 			sb.append("<option value='"+filenames[i]+"'>"+filenames[i]+"</option>");
 		}
 		
-		int start = html.indexOf("@option");	
-		int end = start + "@option".length();	
-		String replaceText = sb.toString();
 		
-		html.replace(start,end,replaceText);
+//		int start = html.indexOf("@option");	
+//		int end = start + "@option".length();	
 		
-		PrintWriter out = resp.getWriter();
-		out.println(html);
-		out.close();
+//		String replaceText = sb.toString();
+//		html.replace(start,end,replaceText);
+		req.setAttribute("optionsAttr", sb.toString());
 		
+		//A,B
+		String imgCookieValue = new CookieUtil(req).getCookieValue("imageCookie");
+		StringBuffer imgTags = new StringBuffer();
+		if(imgCookieValue != null) {
+			String[] imgNames = imgCookieValue.split(",");
+			String imgPattern = "<img src='imgService?imageSel=%s' />";
+			for(String imgName : imgNames) {
+				imgTags.append(String.format(imgPattern, imgName));
+			}
+		}
+		req.setAttribute("imgTags", imgTags);
+//		start = html.indexOf("@images");	
+//		end = start + "@images".length();
+//		html.replace(start,end,imgTags.toString());
+//		PrintWriter out = resp.getWriter();
+//		out.println(html);
+//		out.close();
+		String view = "/WEB-INF/views/imageView.jsp";
+		RequestDispatcher rd = req.getRequestDispatcher("");
+		rd.include(req, resp);
 	}
 }

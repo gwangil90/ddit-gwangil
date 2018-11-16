@@ -13,6 +13,10 @@
   	<param-name>contentFolder</param-name>
   	<param-value>d:/contents</param-value>
   </context-param>
+  <context-param>
+  	<param-name>fileList</param-name>
+  	<param-value>C:\Users\pc06\git\ddit-gwangil\webStudy01\WebContent</param-value>
+  </context-param>
   
   <servlet>
     <servlet-name>DescriptionServlet</servlet-name>
@@ -52,4 +56,12 @@
  <session-config>
  	<session-timeout>4</session-timeout>
  </session-config>
+<!--  <jsp-config>
+ 	<jsp-property-group>
+ 		<url-pattern>/07/*</url-pattern>
+ 		<include-prelude>
+ 			/include/codeFragment.jsp
+ 		</include-prelude>
+ 	</jsp-property-group>
+ </jsp-config> -->
 </web-app>

@@ -26,7 +26,8 @@
 <form action="<%=request.getContextPath() %>/login/loginCheck.jsp" method="post">
 	<ul>
 		<li>
-			아이디 : <input type="text" name="mem_id" value="<%=Objects.toString(failedId, "")%>"> 
+			아이디 : <input type="text" name="mem_id" value="<%=Objects.toString(failedId, "")%>">
+			<input type="checkbox" name="idChecked" value="idSaved">아이디기억하기
 		</li>
 		<li>
 			비밀번호 : <input type="password" name="mem_pass">
