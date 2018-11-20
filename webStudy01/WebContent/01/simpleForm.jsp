@@ -1,28 +1,30 @@
+<%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="kr.or.ddit.vo.AlbasengVO"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.Objects"%>
-<%@page import="java.util.Map.Entry"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
 <!-- simpleForm에서 받아오는 모든 파라미터를 String타입등의 변수값으로 확보 -->
 <% 
 
-/* Map<String, String> gradeMap = (Map<String,String>)application.getAttribute("gradeMap");
-Map<String, String> licenseMap = (Map<String,String>)application.getAttribute("licenseMap"); 
-*/
+// Map<String, String> gradeMap = (Map<String,String>)application.getAttribute("gradeMap");
+// Map<String, String> licenseMap = (Map<String,String>)application.getAttribute("licenseMap");
 
-/* Map<String,String> errors = (Map<String,String>)request.getAttribute("errors");
-AlbasengVO albaVO = (AlbasengVO)request.getAttribute("albaVO");
-if(albaVO == null) albaVO = new AlbasengVO(); //null 방지
-if(errors == null) errors = new LinkedHashMap<>(); //null 방지 */
-%>
-<jsp:useBean id="gradeMap"class="java.util.HashMap" scope="application"></jsp:useBean>
-<jsp:useBean id="licenseMap"class="java.util.LinkedHashMap" scope="application"></jsp:useBean>
-<jsp:useBean id="albaVO" class="kr.or.ddit.vo.AlbasengVO" scope="request"></jsp:useBean>
-<jsp:useBean id="errors"class="java.util.LinkedHashMap" scope="request"></jsp:useBean>    
+// AlbasengVO albaVO = (AlbasengVO)request.getAttribute("albaVO");
+// if(albaVO == null) albaVO = new AlbasengVO(); //null 방지
+// Map<String,String> errors = (Map<String,String>)request.getAttribute("errors");
+// if(errors == null) errors = new LinkedHashMap<>(); //null 방지
+%>    
+
+<!-- useBean을 쓰면 위의 표현식 안에 선언이 따로 필요가 없네 -->
+<jsp:useBean id="gradeMap" class="java.util.HashMap" scope="application"/>
+<jsp:useBean id="licenseMap" class="java.util.LinkedHashMap" scope="application"/>
+<jsp:useBean id="albaVO" class="kr.or.ddit.vo.AlbasengVO" scope="request"/> <!-- 위의 16~19번째 줄을 단 한줄에! -->
+<jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,7 +68,7 @@ if(errors == null) errors = new LinkedHashMap<>(); //null 방지 */
 				<input type="tel" name="tel" placeholder="000-0000-0000" 
 					pattern="\d[3}-[0-9]{3,4}-\d{4}"
 					required="required"
-					value="<%=Objects.toString(albaVO.gettel(), "") %>"
+					value="<%=Objects.toString(albaVO.getTel(), "") %>"
 					/>
 					<span class="error">
 					<%=Objects.toString(errors.get("tel"),"")%>

@@ -1,7 +1,12 @@
-<form method="get">
-	최소단 : <input type="number" name="minDan">
-	최대단 : <input type="number" name="maxDan">
-	<input type="hidden" name="command" value="gugudanprocess">
-	<input type="submit" value="전송">
-	<input type="button" value="걍버튼">
+<!-- HTML태그 중에서 서버쪽으로 유일하게 넘어갈 수 있는 태그로 form태그가 있으며 반드시 입력 데이터를 넘기기 위해서 이 태그를 씌워주어야 한다.-->
+<!-- action의 경로를 씌워줄 때 상대경로가 띄워져야 한다.-->
+<form method="get"> <!-- action의 주소를 생략하면 현 페이지인 index.jsp의 주소를 그대로 사용 -->
+	<!-- 데이터의 식별을 위한 단서로 name속성이 들어가며 name 속성값과 입력값은 서버로 넘어갈 수 있다. id속성은 클라이언트 쪽에서만 가능하므로 데이터를 보내줄 때는 id가 아닌 name으로 지정해주어야 한다. -->
+	최소단 : <input type="number" name="minDan"/>
+	최대단 : <input type="number" name="maxDan"/> 
+	<input type="hidden" name="command" value="gugudanprocess"/> <!-- 구구단페이지로 가서 min max의 파라미터를 보내기 위함 -->
+	<input type="submit" value="전송"/>
+	<input type="button" value="그냥 버튼이라면?"/>
+	<!-- submit으로 만들어진 input은 클릭이라는 핸들러만으로는 이벤트를 처리할 수 없다. -->
+	<!-- 이벤트가 있다면 타켓은 버튼인데 submit이라는 버튼의 이벤트는 form태그가 된다. -->
 </form>

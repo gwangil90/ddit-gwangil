@@ -7,14 +7,15 @@
 <title>05/destination.jsp</title>
 </head>
 <body>
-<h4>페이지 이동 후 최종도착지</h4>
+<h4>페이지 이동 후 최종 도착지</h4>
 <pre>
 	페이지 이동 후 브라우저의 주소를 확인할 것.
 	
-	<%=pageContext.getAttribute("pageContextAttr") %>
-	<%=request.getAttribute("requestAttr") %>
-	<%=session.getAttribute("sessionAttr") %>
-	<%=application.getAttribute("applicationAttr") %>
+	<%=pageContext.getAttribute("pageContextAttr")%>
+	<%=request.getAttribute("requestAttr")%>
+	<%=session.getAttribute("sessionAttr")%>
+	<%=application.getAttribute("applicationAttr")%>
+	
 </pre>
 </body>
 </html>

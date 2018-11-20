@@ -10,28 +10,38 @@ import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.utils.CookieUtil;
 
 public class ImagesFormServlet extends HttpServlet{
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html;charset=UTF-8");
+
 		ServletContext context =  req.getServletContext();
-		String contentFolder = context.getInitParameter("contentFolder");
-		File folder = new File(contentFolder);
-//		File folder = (File)context.getAttribute("contentFolder");
+		File folder = (File)context.getAttribute("contentFolder");
 		
 		String[] filenames = folder.list((File dir, String name) -> {
 			String mime = context.getMimeType(name);
 		    return mime.startsWith("image/");
 		});
 		
+//		// action 속성의 값은 context/imgService, method="get"
+//		InputStream in = this.getClass().getResourceAsStream("imageView.html");
+//		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+//		BufferedReader br = new BufferedReader(isr);
+//		
+//		StringBuffer html = new StringBuffer();
+//		String temp = null;
+//		while((temp = br.readLine()) != null){
+//			html.append(temp);
+//		}	
 		
 		StringBuffer sb = new StringBuffer();
 		//String pattern = "<option value='%s'>%s</option>";
@@ -39,33 +49,50 @@ public class ImagesFormServlet extends HttpServlet{
 			sb.append("<option value='"+filenames[i]+"'>"+filenames[i]+"</option>");
 		}
 		
-		
 //		int start = html.indexOf("@option");	
 //		int end = start + "@option".length();	
 		
+		
 //		String replaceText = sb.toString();
 //		html.replace(start,end,replaceText);
-		req.setAttribute("optionsAttr", sb.toString());
 		
-		//A,B
+		req.setAttribute("optionsAttr", sb.toString());
+
+		// JSON 형태 기록
 		String imgCookieValue = new CookieUtil(req).getCookieValue("imageCookie");
 		StringBuffer imgTags = new StringBuffer();
-		if(imgCookieValue != null) {
-			String[] imgNames = imgCookieValue.split(",");
+		if(imgCookieValue!=null) {
+			// unmarshalling
+			ObjectMapper mapper = new ObjectMapper();
+			String[] imgNames = mapper.readValue(imgCookieValue, String[].class); //씨발 이건 대체 뭐야;
+			
 			String imgPattern = "<img src='imgService?imageSel=%s' />";
 			for(String imgName : imgNames) {
-				imgTags.append(String.format(imgPattern, imgName));
+				imgTags.append(
+					String.format(imgPattern, imgName)	
+					);
 			}
 		}
+		
 		req.setAttribute("imgTags", imgTags);
 //		start = html.indexOf("@images");	
 //		end = start + "@images".length();
-//		html.replace(start,end,imgTags.toString());
+//		html.replace(start, end, imgTags.toString());
+		String view = "/WEB-INF/views/imageView.jsp";
+		RequestDispatcher rd = req.getRequestDispatcher(view);
+		rd.include(req, resp);
+		
 //		PrintWriter out = resp.getWriter();
 //		out.println(html);
 //		out.close();
-		String view = "/WEB-INF/views/imageView.jsp";
-		RequestDispatcher rd = req.getRequestDispatcher("");
-		rd.include(req, resp);
+		
 	}
 }
+
+
+
+
+
+
+
+

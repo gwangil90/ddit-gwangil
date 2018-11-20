@@ -1,12 +1,18 @@
 package kr.or.ddit.web;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
 import kr.or.ddit.vo.AlbasengVO;
 
 @WebServlet(value="/albamon", loadOnStartup=1)
@@ -111,7 +118,7 @@ public class SimpleFormProcessServlet extends HttpServlet {
 
 		//input태그의 name으로 지정된 파라미터를 확보하고 이를 각각의 VO객체에 해당되는 값에 set으로 넣어준다.  
 		av.setName(req.getParameter("name"));
-		av.settel(req.getParameter("tel"));
+		av.setTel(req.getParameter("tel"));
 		av.setAddress(req.getParameter("address"));
 		av.setGender(req.getParameter("gender"));
 		av.setCareer(req.getParameter("career"));
@@ -131,7 +138,7 @@ public class SimpleFormProcessServlet extends HttpServlet {
 			valid = false;
 			errors.put("name","이름 누락");
 		}
-		if(StringUtils.isBlank(av.gettel())) {
+		if(StringUtils.isBlank(av.getTel())) {
 			valid = false;	
 			errors.put("tel","연락처 누락");
 		}

@@ -32,7 +32,6 @@
 	</thead>
 	<tbody>
 		<%	
-		//깃 테스트 중입니다.
 			Map<String, AlbasengVO> albaVO = (Map<String, AlbasengVO>)getServletContext().getAttribute("albasengs");
 		
 			for(Entry<String, AlbasengVO> entry : albaVO.entrySet()){	
@@ -41,7 +40,7 @@
 				<td><%=entry.getKey() %></td>
 				<td><%=entry.getValue().getName() %></td>
 				<td><%=entry.getValue().getAddress() %></td>
-				<td><%=entry.getValue().gettel() %></td>
+				<td><%=entry.getValue().getTel() %></td>
 			</tr>
 			<% 	
 			}
