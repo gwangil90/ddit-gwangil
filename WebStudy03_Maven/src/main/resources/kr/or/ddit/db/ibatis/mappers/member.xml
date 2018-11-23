@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Member">
+	<select id="selectMember" parameterClass="string" resultClass="memberVO">
+		SELECT
+		MEM_ID,MEM_PASS,MEM_NAME,MEM_REGNO1,MEM_REGNO2,
+		TO_CHAR(MEM_BIR,'YYYY-MM-DD') MEM_BIR,MEM_ZIP,
+		MEM_ADD1,MEM_ADD2,MEM_HOMETEL,MEM_COMTEL,
+		MEM_HP,MEM_MAIL,MEM_JOB,MEM_LIKE,
+		MEM_MEMORIAL,TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') MEM_MEMORIALDAY,
+		MEM_MILEAGE,MEM_DELETE , MEM_AUTH
+		FROM MEMBER 
+		WHERE MEM_ID=#asdas#
+	</select>
+	<select id="selectMemberList" resultClass="memberVO">
+	 select mem_id, mem_name, mem_add1, mem_add2, mem_mail, mem_mileage from member
+	</select>
+	<insert id="insertMember" parameterClass="memberVO">
+		INSERT INTO Member (
+    		mem_id,mem_pass,mem_name,
+  			mem_regno1,mem_regno2,mem_bir,
+  			mem_zip, mem_add1, mem_add2,
+  			mem_hometel , mem_comtel , mem_hp,
+  			mem_mail , mem_job , mem_like,
+  			mem_memorial , mem_memorialday , mem_mileage, MEM_AUTH)
+  		VALUES (
+			#mem_id# , #mem_pass# , #mem_name#,
+  			#mem_regno1# , #mem_regno2# , to_date(#mem_bir#,'YYYY-MM-DD'),
+  			#mem_zip# , #mem_add1# , #mem_add2#,
+  			#mem_hometel# , #mem_comtel# , #mem_hp#,
+  			#mem_mail# , #mem_job# , #mem_like#,
+  			#mem_memorial# , to_date(#mem_memorialday#,'YYYY-MM-DD'), 1000, 'ROLE_USER'
+		)
+	</insert>
+	
+	<update id="updateMember" parameterClass="MemberVO">
+		update member
+		set mem_zip=#mem_zip#, mem_add1=#mem_add1#, mem_add2=#mem_add2#,
+			mem_hometel=#mem_hometel#, mem_comtel=#mem_comtel#, mem_hp=#mem_hp#, mem_mail=#mem_mail#,
+			mem_memorial=#mem_memorial#, mem_memorialday=#mem_memorialday#
+		where mem_id = #mem_id#
+	</update>
+	
+	<delete id="deleteMember" parameterClass="String">
+		update member
+		set mem_delete='y'
+		where mem_id= #str#
+	</delete>
+</sqlMap>

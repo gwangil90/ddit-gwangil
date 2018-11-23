@@ -12,4 +12,24 @@
 		FROM MEMBER 
 		WHERE MEM_ID=#asdas#
 	</select>
+	<select id="selectMemberList" resultClass="memberVO">
+	 select mem_id, mem_name, mem_add1, mem_add2, mem_mail, mem_mileage from member
+	</select>
+	<insert id="insertMember" parameterClass="memberVO">
+		INSERT INTO Member (
+    		mem_id,mem_pass,mem_name,
+  			mem_regno1,mem_regno2,mem_bir,
+  			mem_zip, mem_add1, mem_add2,
+  			mem_hometel , mem_comtel , mem_hp,
+  			mem_mail , mem_job , mem_like,
+  			mem_memorial , mem_memorialday , mem_mileage)
+  		VALUES (
+			#mem_id# , #mem_pass# , #mem_name#,
+  			#mem_regno1# , #mem_regno2# , to_date(#mem_bir#,'YYYY-MM-DD'),
+  			#mem_zip# , #mem_add1# , #mem_add2#,
+  			#mem_hometel# , #mem_comtel# , #mem_hp#,
+  			#mem_mail# , #mem_job# , #mem_like#,
+  			#mem_memorial# , to_date(#mem_memorialday#,'YYYY-MM-DD'), 1000
+		)
+	</insert>
 </sqlMap>
