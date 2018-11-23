@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
 /**
@@ -27,51 +28,40 @@ import kr.or.ddit.vo.MemberVO;
  * 8. 이동 방식을 결정하고, V.L로 이동.
  * 
  */
-@WebServlet("/member/memberDelete.do")
-public class MemberDeleteServlet extends HttpServlet{
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+public class MemberDeleteController implements ICommandHandler{
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String mem_id = req.getParameter("mem_id");
 		String mem_pass = req.getParameter("mem_pass");
 		if(StringUtils.isBlank(mem_id)||StringUtils.isBlank(mem_pass)) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+			return null;
 		}
 		IMemberService service = new MemberServiceImpl();
 		ServiceResult result = service.removeMember(new MemberVO(mem_id, mem_pass));
 		String view = null;
-		boolean redirect = false;
 		String message = null;
 		switch (result) {
 		case INVALIDPASSWORD:
 			message = "비번 오류";
 //			view = "/member/memberView.do?who="+mem_id;
-			view = "/member/mypage.do";
-			redirect = true;
+			view = "redirect:/member/mypage.do";
 			break;
 		case FAILED :
 			message = "서버 오류, 미안~";
 //			view = "/member/memberView.do?who="+mem_id;
-			view = "/member/mypage.do";
-			redirect = true;
+			view = "redirect:/member/mypage.do";
 			break;
 		default:
 //			view = "/member/memberList.do";
-			view = "/common/message.jsp";
+			view = "redirect:/common/message.jsp";
 			message = "탈퇴약관 : 일주일이내에서 즐대!!! 같은 아이디로 재가입 불가" ;
 			req.getSession().setAttribute("goLink", "/");
 			req.getSession().setAttribute("isRemoved", new Boolean(true));
 //			req.getSession().invalidate();
-			redirect = true;
 			break;
 		}
 		req.getSession().setAttribute("message", message);
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath() + view);
-		}else {
-			RequestDispatcher rd = req.getRequestDispatcher(view);
-			rd.forward(req, resp);
-		}
+		return view;
 	}
 }
 

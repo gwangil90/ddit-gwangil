@@ -21,23 +21,19 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberUpdate.do")
-public class MemberUpdateServlet extends HttpServlet{
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
+public class MemberUpdateController implements ICommandHandler{
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		MemberVO member = new MemberVO();
 		req.setAttribute("member", member);
-//		member.setMem_id(req.getParameter("mem_id"));
 		try {
 			BeanUtils.populate(member, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new CommonException(e);
 		}
 		String goPage = null;
-		boolean redirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -47,30 +43,23 @@ public class MemberUpdateServlet extends HttpServlet{
 			ServiceResult result = service.modifyMember(member);
 			switch (result) {
 			case INVALIDPASSWORD:
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "/member/memberView";
 				message = "비번이 틀렸습니다";
 				break;
 			case FAILED:
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "/member/memberView";
 				message = "서버 오류로 인한 실패, 잠시 뒤 다시 하셈.";
 				break;
 			case OK:
 //				goPage = "/member/memberView.do?who="+member.getMem_id();
-				goPage = "/member/mypage.do";
-				redirect = true;
+				goPage = "rerirect:/member/mypage.do";
 				break;
 			}
 			req.setAttribute("message", message);
 		} else {
-			goPage = "/WEB-INF/views/member/memberView.jsp";
+			goPage = "/member/memberView";
 		}
-		if (redirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		} else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
-		
+		return goPage;
 	}
 
 	private boolean validate(MemberVO member, Map<String, String> errors) {

@@ -21,19 +21,29 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
-@WebServlet("/member/memberInsert.do")
-public class MemberInsertServlet extends HttpServlet {
+public class MemberInsertController implements ICommandHandler{
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String view = "/WEB-INF/views/member/memberForm.jsp";
-		RequestDispatcher rd = req.getRequestDispatcher(view);
-		rd.forward(req, resp);
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String method = req.getMethod();
+		String view = null;
+		if("get".equalsIgnoreCase(method)) {
+			view = doGet(req, resp);
+		}else if("post".equalsIgnoreCase(method)){
+			view = doPost(req, resp);
+		}else {
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"반환 메소드가 존재하지 않음");
+			
+		}
+		return view;
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
+	protected String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String view = "/member/memberForm";
+		return view;
+	}
+	protected String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		MemberVO member = new MemberVO();
 		req.setAttribute("member", member);
 //		member.setMem_id(req.getParameter("mem_id"));
@@ -43,7 +53,6 @@ public class MemberInsertServlet extends HttpServlet {
 			throw new CommonException(e);
 		}
 		String goPage = null;
-		boolean redirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -53,29 +62,22 @@ public class MemberInsertServlet extends HttpServlet {
 			ServiceResult result = service.registMember(member);
 			switch (result) {
 			case PKDUPLICATED:
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "/member/memberForm";
 				message = "아이디 중복, 바꾸셈.";
 				break;
 			case FAILED:
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "/member/memberForm";
 				message = "서버 오류로 인한 실패, 잠시 뒤 다시 하셈.";
 				break;
 			case OK:
-				goPage = "/member/memberList.do";
-				redirect = true;
+				goPage = "redirect:/member/memberList.do";
 				break;
 			}
 			req.setAttribute("message", message);
 		} else {
-			goPage = "/WEB-INF/views/member/memberForm.jsp";
+			goPage = "/member/memberForm";
 		}
-		if (redirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		} else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
-
+		return goPage;
 	}
 	
 	private boolean validate(MemberVO member, Map<String, String> errors) {
@@ -137,6 +139,7 @@ public class MemberInsertServlet extends HttpServlet {
 		}
 		return valid;
 	}
+
 }
 
 

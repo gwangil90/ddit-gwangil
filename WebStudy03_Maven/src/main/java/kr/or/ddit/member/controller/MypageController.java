@@ -12,16 +12,15 @@ import javax.servlet.http.HttpSession;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/mypage.do")
-public class MypageServlet extends HttpServlet{
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+public class MypageController implements ICommandHandler{
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		if(session == null || session.isNew()) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"로그인을 확인해주세요");
+			return null;
 		}
 		session.getAttribute("authMember");
 		MemberVO authmember = (MemberVO)session.getAttribute("authMember");
@@ -32,8 +31,7 @@ public class MypageServlet extends HttpServlet{
 		MemberVO member = service.retrieveMember(mem_id);
 		req.setAttribute("member", member);
 		
-		String view = "/WEB-INF/views/member/memberView.jsp";
-		RequestDispatcher rd = req.getRequestDispatcher(view);
-		rd.forward(req, resp);
+		String view = "member/memberView";
+		return view;
 	}
 }
